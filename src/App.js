@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Todo from "./components/Todo";
 import NavItem from "./components/NavItem";
+import AddTodo from "./components/AddTodo";
 
 function App() {
   let initialTodos = [
@@ -9,6 +10,7 @@ function App() {
   ];
 
   const [todo, setTodo] = useState("");
+  const [todoError, setTodoError] = useState("");
   const [todos, setTodos] = useState(initialTodos);
   const [visible, setVisible] = useState(false);
 
@@ -25,11 +27,16 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setTodos((prevTodos) => [
-      ...prevTodos,
-      { id: prevTodos.length + 1, text: todo },
-    ]);
-    setTodo("");
+    if (todo !== "") {
+      setTodos((prevTodos) => [
+        ...prevTodos,
+        { id: prevTodos.length + 1, text: todo, done: false },
+      ]);
+      setTodo("");
+      setVisible(false);
+    } else {
+      setTodoError("You must enter a Todo item before attempting to save.");
+    }
   };
 
   return (
@@ -43,30 +50,22 @@ function App() {
       </ul>
 
       {visible && (
-        <div className="card pt-4 pb-4 py-4 px-4 mb-2">
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3 mt-3">
-              <label className="form-label">New Todo:</label>
-              <input
-                type="text"
-                placeholder="Type a todo item"
-                className="form-control"
-                onChange={handleChange}
-                value={todo}
-              />
-            </div>
-            <button type="submit" className="btn btn-block btn-primary">
-              Save
-            </button>
-          </form>
-        </div>
+        <AddTodo
+          todoItem={todo}
+          todoErr={todoError}
+          onChange={handleChange}
+          onSubmit={handleSubmit}
+        />
       )}
 
       <div className="card shadow-sm pt-4 pb-4 py-4 px-4">
         <div className="list-group w-auto">
-          {todos.map((item) => {
-            return <Todo key={item.id} text={item.text} />;
-          })}
+          {todos
+            .map((item) => {
+              return <Todo key={item.id} text={item.text} status={item.done} />;
+            })
+            .reverse()}
+          {console.info(todos)}
         </div>
       </div>
     </div>
