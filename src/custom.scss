@@ -1,6 +1,8 @@
 @import "~bootstrap/scss/bootstrap.scss";
 @import "~bootstrap-icons/font/bootstrap-icons.css";
-
+body{
+    background: #f3f3f3;
+}
 .w-50{
     @media screen and (max-width: 960px){
         width: 100% !important;

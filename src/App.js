@@ -5,7 +5,7 @@ import AddTodo from "./components/AddTodo";
 
 function App() {
   let initialTodos = [
-    { id: 1, text: "Learn React", done: true },
+    { id: 1, text: "Learn React", done: false },
     { id: 2, text: "Learn Node", done: false },
   ];
 
@@ -30,13 +30,17 @@ function App() {
     if (todo !== "") {
       setTodos((prevTodos) => [
         ...prevTodos,
-        { id: prevTodos.length + 1, text: todo, done: false },
+        { id: prevTodos.length + 2, text: todo, done: false },
       ]);
       setTodo("");
-      setVisible(false);
+      setVisible(!visible);
     } else {
       setTodoError("You must enter a Todo item before attempting to save.");
     }
+  };
+
+  const handleDeleteTodo = (id) => {
+    setTodos((prevTodos) => prevTodos.filter((item) => item.id !== id));
   };
 
   return (
@@ -58,16 +62,24 @@ function App() {
         />
       )}
 
-      <div className="card shadow-sm pt-4 pb-4 py-4 px-4">
-        <div className="list-group w-auto">
-          {todos
-            .map((item) => {
-              return <Todo key={item.id} text={item.text} status={item.done} />;
-            })
-            .reverse()}
-          {console.info(todos)}
+      {todos.length > 0 && (
+        <div className="card shadow-sm pt-4 pb-4 py-4 px-4">
+          <div className="list-group w-auto">
+            {todos
+              .map((item) => {
+                return (
+                  <Todo
+                    key={item.id}
+                    text={item.text}
+                    status={item.done}
+                    deleteTodo={() => handleDeleteTodo(item.id)}
+                  />
+                );
+              })
+              .reverse()}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

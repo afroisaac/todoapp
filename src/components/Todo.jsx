@@ -1,4 +1,11 @@
-const Todo = ({ text, status }) => {
+import { useState } from "react";
+const Todo = ({ text, status, deleteTodo }) => {
+  const [checked, setChecked] = useState(false);
+
+  const handleChange = (e) => {
+    setChecked(!checked);
+  };
+
   return (
     <div className="list-group-item">
       <div className="d-flex justify-content-between">
@@ -7,9 +14,10 @@ const Todo = ({ text, status }) => {
             type="checkbox"
             name="todo-control"
             className="form-check-input"
-            checked={status}
+            checked={status ? status : checked}
+            onChange={handleChange}
           />
-          {status ? (
+          {status || checked ? (
             <div>
               <strike>{text}</strike>
             </div>
@@ -18,7 +26,7 @@ const Todo = ({ text, status }) => {
           )}
         </div>
 
-        <a href="#" className="btn btn-sm btn-danger">
+        <a href="#" className="btn btn-sm btn-danger" onClick={deleteTodo}>
           <i className="bi bi-trash"></i>
         </a>
       </div>
